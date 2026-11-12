@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Taller AR - Omar Quispe</title>
+    
+    <!-- Bibliotecas A-Frame y AR.js -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
+    <style>
+      .ui-capa {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        font-family: sans-serif;
+        color: white;
+        background: rgba(0, 0, 0, 0.55);
+        padding: 10px 14px;
+        border-radius: 8px;
+        text-shadow: 1px 1px 2px #000;
+      }
+      .ui-capa h2 { margin: 0 0 6px 0; font-size: 16px; }
+      .ui-capa p { margin: 0 0 8px 0; font-size: 14px; }
+      button {
+        padding: 8px 14px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #ffffff;
+        color: #111;
+        border: none;
+        border-radius: 5px;
+      }
+      button:active { background-color: #cccccc; }
+    </style>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+
+    <div class="ui-capa">
+      <h2>Estudiantes: 
+QUISPE CONDORI KEVIN OMAR; MAYTA NINA JOSE ANTONIO; APAZA ROQUE JOSE MANUEL
+</h2>
+      <p>Tamaño: <span id="etiqueta-estado">Normal</span></p>
+      <button id="boton-escala">Cambiar tamaño</button>
+    </div>
+
+    <a-scene 
+      embedded 
+      vr-mode-ui="enabled: false"
+      renderer="logarithmicDepthBuffer: true; precision: medium;"
+      arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono; maxDetectionRate: 60; canvasWidth: 640; canvasHeight: 480;">
+
+      <!-- ========================================================= -->
+      <!-- ZONA 1: MARCADORES, FIGURAS Y COLORES                     -->
+      <!-- ========================================================= -->
+
+      <!-- TARJETA A: Marcador Hiro -> a-box (cubo) -> color: blue -->
+      <a-marker preset="hiro" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
+        <a-box id="figura-1" position="0 0.5 0" material="color: blue; roughness: 0.5;" scale="1 1 1"></a-box>
+      </a-marker>
+
+      <!-- TARJETA B: Marcador Kanji -> a-sphere (esfera) -> color: red -->
+      <a-marker preset="kanji" smooth="true" smoothCount="5" smoothTolerance="0.01" smoothThreshold="2">
+        <a-sphere id="figura-2" position="0 0.5 0" radius="0.5" material="color: red; roughness: 0.5;" scale="1 1 1"></a-sphere>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+
+    </a-scene>
+
+    <script>
+      // =========================================================
+      // ZONA 2: CONFIGURACIÓN RÁPIDA DE ESCALA (CAMBIAR AQUÍ)
+      // =========================================================
+      // 1.5 = +50% (obligatorio por defecto)
+      // 2.0 = Duplicar | 3.0 = Triplicar | 4.0 = Cuadruplicar
+      // 0.5 = Reducir a la mitad | 0.25 = Reducir a un cuarto
+      const FACTOR_ESCALA = 1.5; 
+      const TEXTO_MODIFICADO = 'Ampliado'; // Puedes cambiarlo a 'Reducido' o 'Triplicado'
+      // =========================================================
+
+      const boton = document.getElementById('boton-escala');
+      const etiqueta = document.getElementById('etiqueta-estado');
+      const figura1 = document.getElementById('figura-1');
+      const figura2 = document.getElementById('figura-2');
+
+      let estadoModificado = false;
+
+      boton.addEventListener('click', () => {
+        estadoModificado = !estadoModificado;
+
+        const valor = estadoModificado ? FACTOR_ESCALA : 1;
+        const vectorEscala = `${valor} ${valor} ${valor}`;
+
+        figura1.setAttribute('scale', vectorEscala);
+        figura2.setAttribute('scale', vectorEscala);
+        etiqueta.textContent = estadoModificado ? TEXTO_MODIFICADO : 'Normal';
+      });
+    </script>
+  </body>
+</html>
